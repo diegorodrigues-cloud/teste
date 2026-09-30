@@ -40,6 +40,7 @@ const unsigned long INTERVALO_MS = 1000;  // período de leitura/impressão
 
 bool resistenciaLigada = false;
 unsigned long ultimoTempo = 0;
+float ultimoAdc = 0;  // última leitura bruta de A0 (0 a 1023), para diagnóstico
 
 void acionarResistencia(bool ligar) {
   resistenciaLigada = ligar;
@@ -55,6 +56,7 @@ float lerTemperatura() {
     delay(5);
   }
   float adc = (float)soma / NUM_AMOSTRAS;
+  ultimoAdc = adc;
 
   // Leituras nos extremos indicam termistor desconectado ou em curto
   if (adc <= 1.0 || adc >= 1022.0) {
@@ -93,7 +95,15 @@ void loop() {
 
   if (isnan(temperatura)) {
     acionarResistencia(false);
-    Serial.println(F("ERRO: termistor desconectado ou em curto - resistencia DESLIGADA"));
+    // A0 perto de 0 V: NTC aberto ou sem 5V. A0 perto de 5 V: NTC em curto ou sem o resistor para GND.
+    if (ultimoAdc <= 1.0) {
+      Serial.print(F("ERRO: termistor ABERTO (A0 em ~0 V)"));
+    } else {
+      Serial.print(F("ERRO: termistor EM CURTO (A0 em ~5 V)"));
+    }
+    Serial.print(F(" | ADC = "));
+    Serial.print(ultimoAdc, 0);
+    Serial.println(F(" | resistencia DESLIGADA"));
     return;
   }
 
