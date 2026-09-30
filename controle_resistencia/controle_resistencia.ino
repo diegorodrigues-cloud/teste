@@ -70,8 +70,10 @@ float lerTemperatura() {
 }
 
 void setup() {
-  pinMode(PINO_RESISTENCIA, OUTPUT);
+  // Define o nível "desligado" antes de configurar o pino como saída,
+  // para o relé não pulsar na inicialização
   acionarResistencia(false);
+  pinMode(PINO_RESISTENCIA, OUTPUT);
 
   Serial.begin(9600);
   Serial.println(F("Controle de temperatura iniciado"));
