@@ -29,3 +29,14 @@ Exemplo de saída:
 ```
 Temperatura: 97.8 C | Setpoint: 100.0 C | Resistencia: LIGADA
 ```
+
+## Gravando no Arduino Nano
+
+O código funciona sem alterações no Nano (mesmo chip ATmega328P do Uno; os pinos `5V`, `GND`, `A0` e `D8` estão marcados na placa).
+
+Na Arduino IDE:
+
+1. **Ferramentas → Placa → Arduino AVR Boards → Arduino Nano**
+2. **Ferramentas → Processador → ATmega328P**. Se der erro de upload (`stk500_getsync` / `not in sync`), troque para **ATmega328P (Old Bootloader)**, comum em clones.
+3. **Ferramentas → Porta**: escolha a porta que aparece ao conectar o Nano. Clones com chip CH340 podem precisar do driver CH340 no Windows.
+4. Clique em **Carregar** e abra o **Monitor Serial** em 9600 baud.
